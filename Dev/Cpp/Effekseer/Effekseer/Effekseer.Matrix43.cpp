@@ -295,6 +295,13 @@ void Matrix43::Translation( float x, float y, float z )
 	Value[3][2] = z;
 }
 
+void Matrix43::ReplaceTranslation(float x, float y, float z)
+{
+	Value[3][0] = x;
+	Value[3][1] = y;
+	Value[3][2] = z;
+}
+
 //----------------------------------------------------------------------------------
 //
 //----------------------------------------------------------------------------------

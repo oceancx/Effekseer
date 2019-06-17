@@ -109,6 +109,11 @@ public:
 	void Translation( float x, float y, float z );
 
 	/**
+		@brief	replace translation values
+	*/
+	void ReplaceTranslation(float x, float y, float z);
+
+	/**
 		@brief	行列を、拡大、回転、移動の行列とベクトルに分解する。
 		@param	s	[out]	拡大行列
 		@param	r	[out]	回転行列

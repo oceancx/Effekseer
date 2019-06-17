@@ -1241,9 +1241,12 @@ void Instance::CalculateMatrix( float deltaFrame )
 			localPosition.Y != 0.0f || 
 			localPosition.Z != 0.0f )
 		{
+			/*
 			Matrix43 MatTra;
 			MatTra.Translation( localPosition.X, localPosition.Y, localPosition.Z );
 			Matrix43::Multiple( m_GlobalMatrix43, m_GlobalMatrix43, MatTra );
+			*/
+			m_GlobalMatrix43.ReplaceTranslation(localPosition.X, localPosition.Y, localPosition.Z);
 		}
 
 		if( m_pEffectNode->GenerationLocation.EffectsRotation )

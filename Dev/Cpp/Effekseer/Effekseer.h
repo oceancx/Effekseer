@@ -961,6 +961,11 @@ public:
 	void Translation( float x, float y, float z );
 
 	/**
+		@brief	replace translation values
+	*/
+	void ReplaceTranslation(float x, float y, float z);
+
+	/**
 		@brief	行列を、拡大、回転、移動の行列とベクトルに分解する。
 		@param	s	[out]	拡大行列
 		@param	r	[out]	回転行列
@@ -3854,6 +3859,13 @@ class EffectFactory;
 			\~Japanese Effect Factoryを取得する。
 		*/
 		EffectFactory* GetEffectFactory(int32_t ind) const;
+
+		/**
+			@brief
+			\~English	clear effect factories
+			\~Japanese 全てのEffect Factoryを削除する。
+		*/
+		void ClearEffectFactory();
 
 		/**
 			@brief
