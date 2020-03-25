@@ -4,6 +4,8 @@
 #include <random>
 
 #include "../Effekseer.Vector3D.h"
+#include "../Noise/CurlNoise.h"
+#include "../Noise/PerlinNoise.h"
 #include "../SIMD/Effekseer.Mat44f.h"
 #include "../SIMD/Effekseer.Vec3f.h"
 
@@ -64,10 +66,22 @@ struct ForceFieldVortexParameter
 	float Power;
 };
 
+struct ForceFieldMagineticParameter
+{
+	// Shape
+	float Power;
+};
+
 struct ForceFieldChargeParameter
 {
 	// Shape
 	float Power;
+};
+
+struct ForceFieldTurbulenceParameter
+{
+	float Power;
+	CurlNoise Noise;
 };
 
 struct ForceFieldDragParameter
@@ -154,22 +168,6 @@ public:
 	}
 };
 
-/**
-X Force　常にPowerの加速度をかける？
-X Wind　Forceと近いが方向が完全一方向
-X Vortex　回転する
-
-  Magneticの意味するところわからない
-  HarmonicとChargeの違い...
-  Lennard-Jones 短距離にランダムの力.... 使い道
-  Texture 実装したいけど...
-  CurveGuide　実装したいけど...
-  Boid 面白いけどGPUパーティクル必須
-  Turburance　おなじみの乱流
-X Drag　空気抵抗　もっといい名前にすべき
-  SmokeFlow　実装無理（流体エンジンが必要
-*/
-
 class ForceField
 {
 	Vec3f
@@ -211,6 +209,23 @@ class ForceField
 
 	Vec3f GetAcceleration(const ForceFieldCommonParameter& ffc,
 						  const ForceFieldFalloffCommonParameter& fffc,
+						  const ForceFieldMagineticParameter& ffp)
+	{
+		float eps = 0.0000001f;
+		auto localPos = ffc.Position - ffc.FieldCenter;
+		auto distance = localPos.GetLength() + eps;
+		auto dir = localPos / distance;
+
+		auto forceDir = Vec3f::Cross(ffc.PreviousSumVelocity, dir);
+
+		if (forceDir.GetSquaredLength() < 0.01f)
+			return Vec3f(0.0f, 0.0f, 0.0f);
+
+		return forceDir * ffp.Power;
+	}
+
+	Vec3f GetAcceleration(const ForceFieldCommonParameter& ffc,
+						  const ForceFieldFalloffCommonParameter& fffc,
 						  const ForceFieldChargeParameter& ffp)
 	{
 		float eps = 0.0000001f;
@@ -224,6 +239,13 @@ class ForceField
 		}
 
 		return -dir * ffp.Power;
+	}
+
+	Vec3f GetAcceleration(const ForceFieldCommonParameter& ffc,
+						  const ForceFieldFalloffCommonParameter& fffc,
+						  const ForceFieldTurbulenceParameter& ffp)
+	{
+
 	}
 
 	Vec3f
