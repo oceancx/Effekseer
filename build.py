@@ -99,3 +99,11 @@ if env['PACKAGEING_FOR_MAC'] == '1':
         aceutils.copytree('release/tools', 'Mac/Effekseer.app/Contents/Resources/tools')
         
         aceutils.call('chmod +x Mac/Effekseer.app/Contents/MacOS/script.sh')
+
+        aceutils.mkdir('Mac/Package/')
+        aceutils.mkdir('Mac/Package/Effekseer.app/')
+        aceutils.copytree('Mac/Effekseer.app', 'Mac/Package/Effekseer.app')
+        aceutils.call('ln -s /Applications Applications > /dev/null 2>&1')        
+        aceutils.call('cp Applications Mac/Package/Applications')
+        aceutils.call('cp Applications')        
+        aceutils.call('hdiutil create Effekseer.dmg -volname "Effekseer" -srcfolder "Mac/Package"')
